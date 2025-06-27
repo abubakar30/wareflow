@@ -21,13 +21,31 @@ const router = createRouter({
       path: '/add-product', // your desired route
       name: 'add-product',
       component: () => import('../views/ProductForm.vue'), // lazy-loaded
+      meta: { requiresAuth: true },
     },
     {
       path: '/view-product', // your desired route
       name: 'view-product',
       component: () => import('../views/ProductList.vue'), // lazy-loaded
+      meta: { requiresAuth: true },
     },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
+    }
   ],
 })
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token');
+
+  if (to.meta.requiresAuth && !token) {
+    next({ path: '/login' });
+  } else {
+    next();
+  }
+});
+
 
 export default router

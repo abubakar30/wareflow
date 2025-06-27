@@ -1,6 +1,19 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { computed } from 'vue'
+
+const router = useRouter()
+
+// ✅ Reactive login state based on token presence
+const isLoggedIn = computed(() => !!localStorage.getItem('token'))
+
+// ✅ Logout function
+const logout = () => {
+  localStorage.removeItem('token')
+  localStorage.removeItem('refreshToken')
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -13,6 +26,7 @@ import HelloWorld from './components/HelloWorld.vue'
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
+        <button v-if="isLoggedIn" @click="logout" class="logout-btn">Logout</button>
       </nav>
     </div>
   </header>
@@ -82,4 +96,17 @@ nav a:first-of-type {
     margin-top: 1rem;
   }
 }
+.logout-btn {
+  background: none;
+  border: none;
+  color: #f00;
+  font-weight: bold;
+  padding: 0 1rem;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  text-decoration: underline;
+}
+
 </style>
