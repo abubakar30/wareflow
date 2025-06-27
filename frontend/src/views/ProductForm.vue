@@ -40,6 +40,7 @@
 </template>
 
 <script setup>
+import axios from 'axios'
 import { reactive } from 'vue'
 
 const form = reactive({
@@ -51,9 +52,15 @@ const form = reactive({
 })
 
 function handleSubmit() {
-  // Send form data to API or parent component
-  console.log('Form submitted:', form)
-  alert('Product submitted!')
+  axios.post('http://localhost:8000/api/products/', form)
+    .then(response => {
+      alert('Product submitted!')
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.error(error)
+      alert('Submission failed.')
+    })
 }
 </script>
 

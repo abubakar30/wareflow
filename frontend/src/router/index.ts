@@ -22,6 +22,11 @@ const router = createRouter({
       name: 'add-product',
       component: () => import('../views/ProductForm.vue'), // lazy-loaded
     },
+    {
+      path: '/view-product', // your desired route
+      name: 'view-product',
+      component: () => import('../views/ProductList.vue'), // lazy-loaded
+    },
   ],
 })
 
