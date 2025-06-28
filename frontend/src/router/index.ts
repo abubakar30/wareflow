@@ -39,8 +39,9 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token');
+  const isTokenValid = token && token !== 'undefined' && token !== 'expired';
 
-  if (to.meta.requiresAuth && !token) {
+  if (to.meta.requiresAuth && !isTokenValid) {
     next({ path: '/login' });
   } else {
     next();
