@@ -1,69 +1,108 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="max-w-xl mx-auto p-6 bg-white rounded-2xl shadow-md space-y-4">
-    <h2 class="text-2xl font-semibold text-gray-800">Add Product</h2>
+  <div class="form-wrapper">
+    <form @submit.prevent="handleSubmit" class="form-box">
+      <h2 class="form-title">ADD PRODUCT</h2>
 
-    <!-- Name -->
-    <div>
-      <label for="name" class="block font-medium text-gray-700">Product Name</label>
-      <input v-model="form.name" id="name" type="text" class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required />
-    </div>
+      <div class="form-group" v-for="(label, key) in labels" :key="key">
+        <label :for="key">{{ label }}</label>
+        <input
+          v-if="key !== 'description'"
+          v-model="form[key]"
+          :id="key"
+          type="text"
+          class="input-field"
+          required
+        />
+        <textarea
+          v-else
+          v-model="form.description"
+          id="description"
+          rows="3"
+          class="input-field"
+        />
+      </div>
 
-    <!-- SKU -->
-    <div>
-      <label for="sku" class="block font-medium text-gray-700">SKU</label>
-      <input v-model="form.sku" id="sku" type="text" class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required />
-    </div>
-
-    <!-- Category -->
-    <div>
-      <label for="category" class="block font-medium text-gray-700">Category</label>
-      <input v-model="form.category" id="category" type="text" class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required />
-    </div>
-
-    <!-- Quantity -->
-    <div>
-      <label for="quantity" class="block font-medium text-gray-700">Quantity</label>
-      <input v-model.number="form.quantity" id="quantity" type="number" min="0" class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required />
-    </div>
-
-    <!-- Description -->
-    <div>
-      <label for="description" class="block font-medium text-gray-700">Description</label>
-      <textarea v-model="form.description" id="description" rows="4" class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
-    </div>
-
-    <!-- Submit Button -->
-    <div class="pt-4">
-      <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Submit</button>
-    </div>
-  </form>
+      <div class="form-actions">
+        <button type="submit" class="submit-btn">Submit</button>
+      </div>
+    </form>
+  </div>
 </template>
 
 <script setup>
-import axios from 'axios'
 import { reactive } from 'vue'
+import axios from 'axios'
 
 const form = reactive({
   name: '',
   sku: '',
   category: '',
-  quantity: 0,
+  quantity: '',
   description: ''
 })
 
+const labels = {
+  name: 'Product Name',
+  sku: 'SKU',
+  category: 'Category',
+  quantity: 'Quantity',
+  description: 'Description'
+}
+
 function handleSubmit() {
   axios.post('http://localhost:8000/api/products/', form)
-    .then(response => {
+    .then(res => {
       alert('Product submitted!')
-      console.log(response.data)
+      console.log(res.data)
     })
-    .catch(error => {
-      console.error(error)
+    .catch(err => {
       alert('Submission failed.')
+      console.error(err)
     })
 }
 </script>
 
 <style scoped>
-/* You can remove this if you're using Tailwind globally */
+.form-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.form-box {
+  width: 100%;
+  max-width: 800px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}
+
+.form-actions {
+  text-align: right;
+}
+
+.submit-btn {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
 </style>

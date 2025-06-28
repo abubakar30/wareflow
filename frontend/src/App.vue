@@ -1,14 +1,35 @@
+<template>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <RouterLink to="/" class="nav-link">Wareflow</RouterLink>
+      <RouterLink to="/view-product" class="nav-link">Inventory Management</RouterLink>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="spacer"></div>
+        <button v-if="isLoggedIn" @click="logout" class="logout-btn">Logout</button>
+      </header>
+
+      <!-- Main View -->
+      <main class="content-area">
+        <RouterView />
+      </main>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
-import { RouterLink, RouterView, useRouter } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 
 const router = useRouter()
 
-// ✅ Reactive login state based on token presence
 const isLoggedIn = computed(() => !!localStorage.getItem('token'))
 
-// ✅ Logout function
 const logout = () => {
   localStorage.removeItem('token')
   localStorage.removeItem('refreshToken')
@@ -16,97 +37,65 @@ const logout = () => {
 }
 </script>
 
-<template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <button v-if="isLoggedIn" @click="logout" class="logout-btn">Logout</button>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
-</template>
-
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+/* Full height and width layout using grid */
+.app-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  grid-template-rows: 60px 1fr;
+  grid-template-areas:
+    "sidebar topbar"
+    "sidebar content";
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+/* Sidebar on the left */
+.sidebar {
+  grid-area: sidebar;
+  background-color: #f5f5f5;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #ddd;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+.nav-item {
+  margin-bottom: 1rem;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
+/* Top bar across top row */
+.topbar {
+  grid-area: topbar;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
 }
 
-nav a:first-of-type {
-  border: 0;
+/* Main content area */
+.main-content {
+  grid-area: content;
+  padding: 2rem;
+  overflow-y: auto;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
+/* Logout button */
 .logout-btn {
   background: none;
-  border: none;
-  color: #f00;
-  font-weight: bold;
-  padding: 0 1rem;
+  border: 1px solid red;
+  color: red;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
   cursor: pointer;
 }
 
 .logout-btn:hover {
-  text-decoration: underline;
+  background-color: #ffe6e6;
 }
-
 </style>
