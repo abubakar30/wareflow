@@ -5,6 +5,7 @@
     <table style="width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
       <thead>
         <tr style="background-color: #f0f0f0;">
+          <th style="border: 1px solid #ccc; padding: 8px;">No</th>
           <th style="border: 1px solid #ccc; padding: 8px;">Name</th>
           <th style="border: 1px solid #ccc; padding: 8px;">Quantity</th>
           <th style="border: 1px solid #ccc; padding: 8px;">SKU</th>
@@ -14,7 +15,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="product in products" :key="product.id">
+        <tr v-for="(product, index) in products" :key="product.id">
+          <td style="border: 1px solid #ccc; padding: 8px;">{{ index + 1 }}</td>
           <td style="border: 1px solid #ccc; padding: 8px;">
             <template v-if="editingId === product.id">
               <input v-model="editedProduct.name" />
