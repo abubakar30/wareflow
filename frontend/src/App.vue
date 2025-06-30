@@ -1,19 +1,15 @@
 <template>
-  <div class="app-layout">
-    <!-- Sidebar -->
-    <aside class="sidebar">
+  <div :class="['app-layout', { 'no-sidebar': !isLoggedIn }]">
+    <!-- Sidebar (visible only if logged in) -->
+    <aside class="sidebar" v-if="isLoggedIn">
       <RouterLink to="/" class="nav-link">Wareflow</RouterLink>
-      <RouterLink to="/view-product" class="nav-link">Inventory Management</RouterLink>
+      <RouterLink to="/add-product" class="nav-link">Add Inventory</RouterLink>
+      <RouterLink to="/view-product" class="nav-link">List of Inventory</RouterLink>
+      <button v-if="isLoggedIn" @click="logout" class="logout-btn">Logout</button>
     </aside>
 
     <!-- Main Content -->
     <div class="main-content">
-      <!-- Top Bar -->
-      <header class="topbar">
-        <div class="spacer"></div>
-        <button v-if="isLoggedIn" @click="logout" class="logout-btn">Logout</button>
-      </header>
-
       <!-- Main View -->
       <main class="content-area">
         <RouterView />
@@ -38,7 +34,7 @@ const logout = () => {
 </script>
 
 <style scoped>
-/* Full height and width layout using grid */
+/* Base layout with sidebar */
 .app-layout {
   display: grid;
   grid-template-columns: 220px 1fr;
@@ -51,7 +47,15 @@ const logout = () => {
   overflow: hidden;
 }
 
-/* Sidebar on the left */
+/* Layout without sidebar */
+.app-layout.no-sidebar {
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "topbar"
+    "content";
+}
+
+/* Sidebar */
 .sidebar {
   grid-area: sidebar;
   background-color: #f5f5f5;
@@ -61,13 +65,7 @@ const logout = () => {
   border-right: 1px solid #ddd;
 }
 
-.nav-item {
-  margin-bottom: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* Top bar across top row */
+/* Topbar */
 .topbar {
   grid-area: topbar;
   background-color: #fff;
@@ -78,9 +76,12 @@ const logout = () => {
   padding: 0 1rem;
 }
 
-/* Main content area */
+/* Main content */
 .main-content {
   grid-area: content;
+  display: flex;
+  justify-content: center; /* center horizontally */
+  align-items: center;     /* center vertically */
   padding: 2rem;
   overflow-y: auto;
 }
